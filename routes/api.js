@@ -47,7 +47,7 @@ router.get('/get-category',(req,res)=>{
    
    
    router.get('/get-subcategory',(req,res)=>{
-       pool.query(`select s.* , (select c.name from category c where c.id = s.categoryid) as categoryname from subcategory s order by id desc limit 10`,(err,result)=>{
+       pool.query(`select s.* , (select c.name from category c where c.id = s.categoryid) as categoryname from subcategory s  order by id desc limit 10`,(err,result)=>{
            if(err) throw err;
            else res.json(result)
        }) 
@@ -195,32 +195,58 @@ router.post("/mycart", (req, res) => {
 });
 
 
+let data2 = []
 
 
 router.get('/index',(req,res)=>{
 
+     
     let data1 = []
-    let data2 = []
+  
+    
     pool.query(`select * from app_order`,(err,result)=>{
         if(err) throw err;
         else {
-     console.log(result.length)
-   for(var i=0;i<result.length;i++){
+    //  console.log(result.length)
+    
+   for( i=0;i<result.length;i++){
+       let j = i
+       let length = result.length
        let title = result[i].title
-       pool.query(`select * from products where categoryid = '${result[i].categoryid}' and subcategoryid = '${result[i].subcategoryid}'`,(err,response)=>{
+       let categoryid = result[i].categoryid
+       let subcategoryid = result[i].subcategoryid
+
+// console.log('original',j)
+
+       
+       pool.query(`select * from products where categoryid = '${categoryid}' and subcategoryid = '${subcategoryid}'`,(err,response)=>{
            if(err) throw err;
            else {
-           // console.log({Title:title,data:response})
-           data1.push({Title:title,data:response},)
-        //   console.log(data1)
-           }
-       })
-       console.log(title)
-        data2.push(data1)
-   }
-   console.log('finaltime',data2)
+  
 
-  res.json(data1)
+
+// console.log(j)
+   data2.push({Title:title,data:response})
+ 
+    // console.log('dfgfdfffff',data2)
+    // res.json(data2)
+
+
+
+           
+           }
+
+        //    console.log('fgy',response[0])
+           
+
+
+       })
+     
+   }
+//    console.log('finaltime',data2)
+   res.json(data2)
+   data2 = []
+
         }
     })
 
