@@ -1,4 +1,5 @@
 var express = require('express');
+const pool = require('../routes/pool');
 var router = express.Router();
 
 /* GET home page. */
@@ -36,15 +37,63 @@ router.get('/product',(req,res)=>{
 
 router.get('/mycart',(req,res)=>{
   if(req.session.usernumber){
-    res.render('cart', { title: 'Express',login:'true' });
+    pool.query(`insert into cart(bookingid ,quantity , price) values ('ESSENTIAL STRUCTURED BLAZER','1','500')`,(err,result)=>{
+
+      if(err) throw err;
+      else {
+
+    pool.query(`select * from cart`,(err,result)=>{
+   if(err) throw err;
+   else{
+    res.render('cart', { title: 'Express',login:'true',result });
+
+   }
+
+
+    })
+
+      }
+    })
 
   }
   else{
-    res.render('cart', { title: 'Express',login:'false' });
+    pool.query(`insert into cart(bookingid ,quantity , price) values ('ESSENTIAL STRUCTURED BLAZER','1','500')`,(err,result)=>{
+      if(err) throw err;
+      else {
+        pool.query(`select * from cart`,(err,result)=>{
+          if(err) throw err;
+          else{
+           res.render('cart', { title: 'Express',login:'true',result });
+       
+          }
+       
+       
+           })
+
+      }
+    })
 
   }
 })
 
+
+
+router.get('/delete',(req,res)=>{
+  pool.query(`delete from cart where id = '${req.query.id}'`,(err,result)=>{
+    if(err) throw err;
+    else {
+      pool.query(`select * from cart`,(err,result)=>{
+        if(err) throw err;
+        else{
+         res.render('cart', { title: 'Express',login:'true',result });
+     
+        }
+     
+     
+         })
+    }
+  })
+})
 
 
 
