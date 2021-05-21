@@ -85,7 +85,8 @@ router.get('/get-address',(req,res)=>{
 
 router.post('/save-address',(req,res)=>{
     let body = req.body;
-    pool.query(`insert into adress set ?`,body,(err,result)=>{
+    console.log('body h',req.body)
+    pool.query(`insert into address set ?`,body,(err,result)=>{
         if(err) throw err;
         else res.json({
             msg : 'success'
