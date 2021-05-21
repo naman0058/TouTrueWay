@@ -63,7 +63,7 @@ router.get('/search',(req,res)=>{
 })
 
 
-router.get('/product-description',(Req,res)=>{
+router.get('/product-description',(req,res)=>{
     var query = `select * from products where id = '${req.query.id}';`
     var query1 = `select * from images where productid = '${req.query.id}';`
     pool.query(query+query1,(err,result)=>{
