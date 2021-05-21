@@ -75,7 +75,7 @@ router.get('/product-description',(Req,res)=>{
 
 
 router.get('/get-address',(req,res)=>{
-    pool.query(`select * from address where userid = '${req.query.id}'`,(err,result)=>{
+    pool.query(`select * from address where usernumber = '${req.query.usernumber}'`,(err,result)=>{
         if(err) throw err;
         else res.json(result)
     })
