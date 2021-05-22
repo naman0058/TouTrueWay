@@ -47,7 +47,7 @@ router.get('/get-category',(req,res)=>{
    
    
    router.get('/get-subcategory',(req,res)=>{
-       pool.query(`select s.* , (select c.name from category c where c.id = s.categoryid) as categoryname from subcategory s  order by id desc limit 10`,(err,result)=>{
+       pool.query(`select s.* , (select c.name from category c where c.id = s.categoryid) as categoryname from subcategory s where s.categoryid = '${req.query.categoryid}'  order by id desc limit 10`,(err,result)=>{
            if(err) throw err;
            else res.json(result)
        }) 
@@ -126,6 +126,7 @@ router.post("/cart-handler", (req, res) => {
             }
             else {
               body["price"] = (req.body.price)*(req.body.quantity)
+              body['oneprice'] = req.body.price
                  pool.query(`insert into cart set ?`, body, (err, result) => {
                  if (err) throw err;
                  else {
@@ -154,14 +155,28 @@ router.get('/myorder',(req,res)=>{
 
 
 
-router.post('/save-user',(Req,res)=>{
+router.post('/save-user',(req,res)=>{
     let body =  req.body;
-    pool.query(`insert into users set ?`,body,(err,result)=>{
+
+
+    pool.query(`select * from user where number = '${req.body.number}'`,(err,result)=>{
         if(err) throw err;
-        else res.json({
-            msg : 'success'
-        })
+        else if(result[0]){
+         res.json({
+             msg : 'already exists'
+         })
+        }
+        else {
+            pool.query(`insert into user set ?`,body,(err,result)=>{
+                if(err) throw err;
+                else res.json({
+                    msg : 'success'
+                })
+            })
+        }
     })
+
+   
 })
 
 
