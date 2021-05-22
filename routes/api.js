@@ -153,7 +153,7 @@ router.post("/cart-handler", (req, res) => {
 
 
 router.get('/myorder',(req,res)=>{
-    pool.query(`select * from booking where number = '${req.query.number}' order by date desc`,(err,result)=>{
+    pool.query(`select * from booking where usernumber = '${req.query.number}' order by date desc`,(err,result)=>{
         if(err) throw err;
         else res.json(result)
     })
@@ -368,70 +368,62 @@ body['date'] = today
     for ( var i = 0; i < 12; i++ ) {
         result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
     }
-   body['orderid'] = result;
+   orderid = result;
 
+
+   
 
 
    pool.query(`select * from cart where number = '${req.body.usernumber}'`,(err,result)=>{
        if(err) throw err;
        else {
-      
 
-//   res.json(cartData)
-for(j=0;j<result.length;j++)  {
+       let data = result
 
-
-
-    cartData['booking_id'] = result[j].booking_id
-    cartData['quantity'] = result[j].quantity
-    cartData['price'] = result[j].price
-    // cartData['categoryid'] = result[i].categoryid
-    cartData['vendorid'] = result[j].vendorid
-
-
-
- var query = `insert into booking set ?`
+       for(i=0;i<result.length;i++){
+        data[i].name = req.body.name
+        data[i].date = today
+        data[i].orderid = orderid
+        data[i].status = 'pending'
+        data[i].number = req.body.number
+        data[i].usernumber = req.body.usernumber
+        data[i].payment_mode = 'cash'
+        data[i].address = req.body.address
+        data[i].id = null
 
 
- let a = cartData
- console.log('card',a)  
+       }
 
-    pool.query(query, a,(err,result)=>{
-        if(err) throw err;
-        else {
-            console.log('card',a)  
 
-    //  pool.query(`update products set quantity = quantity - ${cartData.quantity} where id = '${cartData.booking_id}'`,(err,result)=>{
-    //      if(err) throw err;
-    //      else {
 
-            
+for(i=0;i<data.length;i++) {
+   pool.query(`insert into booking set ?`,data[i],(err,result)=>{
+           if(err) throw err;
+           else {
+  pool.query(`update products set quantity = quantity - ${data[i].quantity} where id = '${data[i].booking_id}'`,(err,result)=>{
+   if(err) throw err;
+   else {
 
-    //         //  res.json({
-    //         //      msg : 'success'
-    //         //  })
-    //      }
-    //  })
+   }
 
-        }
-    })
+  })
 
-    console.log('hi',j)
-
+           }
+      })
 }
 
-// res.json({
-//                 msg : 'success'
-//             })
 
-// pool.query(`delete from cart where number = '${req.body.usernumber}'`,(err,result)=>{
-//     if(err) throw err;
-//     else {
-//         res.json({
-//             msg : 'success'
-//         })
-//     }
-// })
+    
+
+
+pool.query(`delete from cart where number = '${req.body.usernumber}'`,(err,result)=>{
+    if(err) throw err;
+    else {
+        res.json({
+            msg : 'success'
+        })
+    }
+})
 
 
        }
