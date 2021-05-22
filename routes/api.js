@@ -55,6 +55,11 @@ router.get('/get-category',(req,res)=>{
    
 
 
+//    router.get('/get-product',(req,res=>{
+//        pool
+//    }))
+
+
 router.get('/search',(req,res)=>{
     pool.query(`select * from products where keyword Like '%${req.query.search}%'`,(err,result)=>{
         if(err) throw err;
@@ -125,8 +130,9 @@ router.post("/cart-handler", (req, res) => {
                 })
             }
             else {
+                body['oneprice'] = req.body.price
               body["price"] = (req.body.price)*(req.body.quantity)
-              body['oneprice'] = req.body.price
+          
                  pool.query(`insert into cart set ?`, body, (err, result) => {
                  if (err) throw err;
                  else {
@@ -163,7 +169,8 @@ router.post('/save-user',(req,res)=>{
         if(err) throw err;
         else if(result[0]){
          res.json({
-             msg : 'already exists'
+            msg : 'success'
+
          })
         }
         else {
@@ -307,7 +314,7 @@ body['date'] = today
     pool.query(`insert into booking set ?`, body,(err,result)=>{
         if(err) throw err;
         else {
-     pool.query(`update products set quantity = quantity - ${req.body.quantity}`,(err,result)=>{
+     pool.query(`update products set quantity = quantity - ${req.body.quantity} where id = ${req.body.booking_id}`,(err,result)=>{
          if(err) throw err;
          else {
              res.json({
@@ -319,6 +326,123 @@ body['date'] = today
         }
     })
 })
+
+
+
+
+
+router.post('/order-now',(req,res)=>{
+    let body = req.body;
+console.log('body',req.body)
+    let cartData = req.body
+
+
+  //  console.log('CardData',cartData)
+
+     body['status'] = 'pending'
+      
+
+    var today = new Date();
+var dd = today.getDate();
+
+var mm = today.getMonth()+1; 
+var yyyy = today.getFullYear();
+if(dd<10) 
+{
+    dd='0'+dd;
+} 
+
+if(mm<10) 
+{
+    mm='0'+mm;
+} 
+today = yyyy+'-'+mm+'-'+dd;
+
+
+body['date'] = today
+
+
+
+    var randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var result = '';
+    for ( var i = 0; i < 12; i++ ) {
+        result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+    }
+   body['orderid'] = result;
+
+
+
+   pool.query(`select * from cart where number = '${req.body.usernumber}'`,(err,result)=>{
+       if(err) throw err;
+       else {
+      
+
+//   res.json(cartData)
+for(j=0;j<result.length;j++)  {
+
+
+
+    cartData['booking_id'] = result[j].booking_id
+    cartData['quantity'] = result[j].quantity
+    cartData['price'] = result[j].price
+    // cartData['categoryid'] = result[i].categoryid
+    cartData['vendorid'] = result[j].vendorid
+
+
+
+ var query = `insert into booking set ?`
+
+
+ let a = cartData
+ console.log('card',a)  
+
+    pool.query(query, a,(err,result)=>{
+        if(err) throw err;
+        else {
+            console.log('card',a)  
+
+    //  pool.query(`update products set quantity = quantity - ${cartData.quantity} where id = '${cartData.booking_id}'`,(err,result)=>{
+    //      if(err) throw err;
+    //      else {
+
+            
+
+    //         //  res.json({
+    //         //      msg : 'success'
+    //         //  })
+    //      }
+    //  })
+
+        }
+    })
+
+    console.log('hi',j)
+
+}
+
+// res.json({
+//                 msg : 'success'
+//             })
+
+// pool.query(`delete from cart where number = '${req.body.usernumber}'`,(err,result)=>{
+//     if(err) throw err;
+//     else {
+//         res.json({
+//             msg : 'success'
+//         })
+//     }
+// })
+
+
+       }
+   })
+
+   
+})
+
+
+
+
 
 
 // router.post('/orders',(req,res)=>{
