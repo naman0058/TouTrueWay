@@ -185,17 +185,16 @@ router.post("/mycart", (req, res) => {
  
     var query = `select c.*,(select s.name from products s where s.id = c.booking_id) as servicename
     ,(select s.image from products s where s.id = c.booking_id) as productlogo,
-    (select s.quantity from products s where s.id = c.booking_id) as productquantity,
-      (select si.name from size si where si.id = c.booking_id) as sizename
+    (select s.quantity from products s where s.id = c.booking_id) as productquantity
     from cart c where c.number = '${req.body.number}';`
     var query1 = `select count(id) as counter from cart where number = '${req.body.number}';`
-    var query2 = `select sum(c.price) as total_ammount from cart c where c.quantity <= (select p.quantity from product p where p.id = c.booking_id ) and  c.number = '${req.body.number}' ;`
-    var query3 = `select c.*,(select s.name from product s where s.id = c.booking_id) as servicename
-    ,(select s.image from product s where s.id = c.booking_id) as productlogo,
-    (select s.quantity from product s where s.id = c.booking_id) as productquantity,
-      (select si.name from size si where si.id = c.booking_id) as sizename
-    from cart c where c.quantity <= (select p.quantity from product p where p.id = c.booking_id ) and c.number = '${req.body.number}' ;`
-    var query4 = `select count(id) as counter from cart c where c.quantity <= (select p.quantity from product p where p.id = c.booking_id ) and c.number = '${req.body.number}';`
+    var query2 = `select sum(c.price) as total_ammount from cart c where c.quantity <= (select p.quantity from products p where p.id = c.booking_id ) and  c.number = '${req.body.number}' ;`
+    var query3 = `select c.*,(select s.name from products s where s.id = c.booking_id) as servicename
+    ,(select s.image from products s where s.id = c.booking_id) as productlogo,
+    (select s.quantity from products s where s.id = c.booking_id) as productquantity
+      
+    from cart c where c.quantity <= (select p.quantity from products p where p.id = c.booking_id ) and c.number = '${req.body.number}' ;`
+    var query4 = `select count(id) as counter from cart c where c.quantity <= (select p.quantity from products p where p.id = c.booking_id ) and c.number = '${req.body.number}';`
     pool.query(query+query1+query2+query3+query4, (err, result) => {
       if (err) throw err;
       else if (result[0][0]) {
@@ -270,6 +269,56 @@ router.get('/index',(req,res)=>{
 
 
 
+
+router.post('/buy-now',(req,res)=>{
+    let body = req.body;
+
+
+
+    var today = new Date();
+var dd = today.getDate();
+
+var mm = today.getMonth()+1; 
+var yyyy = today.getFullYear();
+if(dd<10) 
+{
+    dd='0'+dd;
+} 
+
+if(mm<10) 
+{
+    mm='0'+mm;
+} 
+today = yyyy+'-'+mm+'-'+dd;
+
+
+body['date'] = today
+
+
+
+    var randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var result = '';
+    for ( var i = 0; i < 12; i++ ) {
+        result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+    }
+   body['orderid'] = result;
+
+
+    pool.query(`insert into booking set ?`, body,(err,result)=>{
+        if(err) throw err;
+        else {
+     pool.query(`update products set quantity = quantity - ${req.body.quantity}`,(err,result)=>{
+         if(err) throw err;
+         else {
+             res.json({
+                 msg : 'success'
+             })
+         }
+     })
+
+        }
+    })
+})
 
 
 // router.post('/orders',(req,res)=>{
