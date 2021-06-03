@@ -109,7 +109,9 @@
                    
                     <div class="col-xl-12 col-xxl-12">
                         <div class="card">
-                            <div class="card-body">    
+                            <div class="card-body">   
+                        <h3 class="content-heading mt-3" style="color: red;"><%=remarks%></h3>
+                                 
                                     <div class="basic-form">
                                         <form action="/vendor-dashboard/kyc_details" method="POST" enctype="multipart/form-data" class="uploadImage">
                                             
@@ -126,7 +128,7 @@
                                                 </div>
                                                 <div class="col-lg-4 col-sm-12">
                                                     <label>GST Number</label>
-                                                    <input type="text" class="form-control" name="gst_number" placeholder="GST Number">
+                                                    <input type="text" class="form-control" name="gst_number" value="<%=gst%>" placeholder="GST Number">
                                                 </div>
 
                                             </div>
@@ -136,7 +138,7 @@
                                             <div class="form-row" style="margin-top:25px"> 
                                                 <div class="col-lg-4 col-sm-12">
                                                     <label>PAN Number</label>
-                                                    <input type="text" class="form-control" name="pan_number" placeholder="PAN Number">
+                                                    <input type="text" class="form-control" name="pan_number" value="<%=pan_number%>" placeholder="PAN Number">
                                                 </div>
                                                 <div class="col-lg-4 col-sm-12">
                                                     <label>PAN Card Front Image</label>
@@ -159,7 +161,7 @@
                                             <div class="form-row" style="margin-top:25px"> 
                                                 <div class="col-lg-4 col-sm-12">
                                                     <label>Aadhar Number</label>
-                                                    <input type="text" class="form-control" name="aadhar_number" placeholder="Aadhar Number">
+                                                    <input type="text" class="form-control" name="aadhar_number"  value="<%=aadhar_number%>" placeholder="Aadhar Number">
                                                 </div>
                                                 <div class="col-lg-4 col-sm-12">
                                                     <label>Aadhar Card Front Image</label>

@@ -10,7 +10,21 @@ var table = 'admin'
 
 router.get('/',(req,res)=>{
     if(req.session.adminid){
-        res.render('Admin/Dashboard',{msg : ''})
+
+
+        var query = `select count(id) as today_order from booking where status = 'completed' and date = curdate();`
+        var query1 = `select count(id) as todat_completed_order from booking where status!= 'completed' and date= curdate();`
+        var query2 = `select sum(price) as today_revenue from booking where date = curdate();`
+        var query3 = `select sum(price) as total_price from booking ;`
+        var query4 = `select * from products order by id desc limit 5;`
+        var query5 = `select * from booking where date = curdate() and status !='completed' ;`
+        pool.query(query+query1+query2+query3+query4+query5,(err,result)=>{
+            res.render('Admin/Dashboard',{msg : '',result})
+
+
+        })
+
+
    }
     else{
         res.render('Admin/login',{msg : '* Invalid Credentials'})
@@ -110,6 +124,57 @@ router.get('/vendor/details/:id',(req,res)=>{
 
 
 
+
+
+router.post('/vendor/update-status',(req,res)=>{
+    
+   pool.query(`update vendor set status = '${req.body.status}' where id = '${req.body.id}'`,(err,result)=>{
+       if(err) throw err;
+       else {
+           console.log('result',result)
+           res.send('success')
+       }
+   })
+})
+
+
+
+
+
+
+router.get('/orders/:type',(req,res)=>{
+    if(req.params.type == 'runnning'){
+       pool.query(`select b.* , 
+       (select p.name from products p where p.id = b.booking_id) as bookingname,
+       (select p.image from products p where p.id = b.booking_id) as bookingimage 
+   
+       from booking b where b.status != 'completed' and b.status != 'cancelled'  order by id desc`,(err,result)=>{
+           err ? console.log(err) : res.render('Admin/ORder',{result, title:'Running Orders'})
+       })
+    }
+    else if(req.params.type=='completed'){
+       pool.query(`select b.* , 
+       (select p.name from products p where p.id = b.booking_id) as bookingname,
+       (select p.image from products p where p.id = b.booking_id) as bookingimage 
+   
+       from booking b where b.status = 'completed'  order by id desc`,(err,result)=>{
+           err ? console.log(err) : res.render('Admin/ORder',{result, title:'Completed Orders'})
+       })
+    }
+    else {
+       pool.query(`select b.* , 
+       (select p.name from products p where p.id = b.booking_id) as bookingname,
+       (select p.image from products p where p.id = b.booking_id) as bookingimage 
+   
+       from booking b where b.status = 'cancelled'  order by id desc`,(err,result)=>{
+           err ? console.log(err) : res.render('Admin/ORder',{result, title:'Cancelled Orders'})
+       })
+    }
+   
+      
+   })
+   
+   
 
 
 // All Data Found

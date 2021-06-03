@@ -62,6 +62,8 @@ router.post('/add-user',(req,res)=>{
   req.session.reqotp = otp;
  
 
+  
+
   sendOtp.send(req.body.number, "DELOTM", otp,(err,result)=>{
     if(err) throw err;
     else{
@@ -82,13 +84,62 @@ router.post('/new-user',(req,res)=>{
     body['number'] = req.session.numberverify
     body['name'] = 'hi'
 
-pool.query(`insert into user set ?`,body,(err,result)=>{
+
+
+pool.query(`select * from user where number = '${req.session.numberverify}'`,(err,result)=>{
   if(err) throw err;
+  else if(result[0]) {
+
+
+    if(req.session.page){
+  pool.query(`update cart set number = '${req.session.numberverify}' where number = '${req.session.ipaddress}'`,(err,result)=>{
+    if(err) throw err;
+    else {
+      req.session.usernumber = req.session.numberverify;
+      res.redirect('/checkout')
+    }
+  })
+    }
+    else {
+      req.session.usernumber = req.session.numberverify;
+      res.redirect('/')
+    }
+
+
+  }
   else {
-    req.session.usernumber = req.session.numberverify
-    res.redirect('/')
+
+    pool.query(`insert into user set ?`,body,(err,result)=>{
+      if(err) throw err;
+      else {
+       
+
+
+
+
+
+        if(req.session.page){
+          pool.query(`update cart set number = '${req.session.numberverify}' where number = '${req.session.ipaddress}'`,(err,result)=>{
+            if(err) throw err;
+            else {
+              req.session.usernumber = req.session.numberverify;
+              res.redirect('/checkout')
+            }
+          })
+            } 
+            else {
+              req.session.usernumber = req.session.numberverify;
+              res.redirect('/')
+            }
+
+
+
+      }
+    })
   }
 })
+
+
 
   }
   else{

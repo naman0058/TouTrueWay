@@ -1,6 +1,36 @@
 <%- include ('./storeListingHeader.ejs') %>
 
 
+
+
+<style>
+
+
+
+.circle {
+    width: 10px;
+    height: 10px;
+    background-color: #62bd19;
+    border-radius: 50%;
+  
+}
+
+
+
+.circle1 {
+    width: 10px;
+    height: 10px;
+    background-color: #bd1919;
+    border-radius: 50%;
+  
+}
+
+
+
+
+</style>
+
+
         <!--**********************************
             Content body start
         ***********************************-->
@@ -86,63 +116,93 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="media align-items-center mb-4">
-                                    <img class="mr-3 circle-rounded" src="/Admin/./assets/images/users/5.jpg" width="80" height="80" alt="">
+                                   
                                     <div class="media-body">
-                                        <h5 class="mb-0">Pikamy Cha</h5>
-                                        <p class="text-muted mb-0">Torrento</p>
+                                        <h5 class="mb-0"><%=result[0][0].name%> </h5>
+                                        <p class="text-muted mb-0"><%=result[0][0].business_name%>
+                                            </p>
                                     </div>
+                                 
+                                      <% if(result[0][0].status =='approved') { %>
+                                           
+                                        <div class="circle"></div>
+
+
+                                        <% } else { %>
+                                            <div class="circle1"></div>
+
+
+                                            <% } %>
+                                     
                                 </div>
 
-                                <h4>About Me</h4>
-                                <p class="text-muted">Hi, I'm Pikamy, has been the industry standard dummy text ever since the 1500s.</p>
+                                <h4>Address</h4>
+                                <p class="text-muted"><%=result[0][0].address%></p>
                                 <ul class="card-profile__info">
-                                    <li class="mb-1"><strong class="text-dark mr-4">Mobile</strong> <span>01793931609</span></li>
-                                    <li><strong class="text-dark mr-4">Email</strong> <span>pikamy@ymail.com</span></li>
+                                    <li class="mb-1"><strong class="text-dark mr-4">Mobile</strong> <span><%=result[0][0].number%></span></li>
+                                    <li><strong class="text-dark mr-4">Category</strong> <span><%=result[0][0].categoryname%></span></li>
+                                   
+                                </ul>
+
+                                <ul class="card-profile__info">
+                                    <li class="mb-1"><strong class="text-dark mr-4">GST Number</strong> <span><%=result[0][0].gst_number%></span></li>
+                                   
                                 </ul>
                             </div>
-                            <div class="card-footer border-0 bg-white pb-5 pt-4">
-                                <div class="card-action social-icons text-center">
-                                    <a class="facebook" href="javascript:void(0)"><span><i class="fa fa-facebook"></i></span></a>
-                                    <a class="twitter" href="javascript:void(0)"><span><i class="fa fa-twitter"></i></span></a>
-                                    <a class="youtube" href="javascript:void(0)"><span><i class="fa fa-youtube"></i></span></a>
-                                    <a class="googlePlus" href="javascript:void(0)"><span><i class="fa fa-google"></i></span></a> 
-                                </div>
-                            </div>
+                          
                         </div>
                     </div>
                     <div class="col-xl-3 col-md-6 col-xxl-6">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Message</h4>
+                                <h4 class="card-title">Kyc Details (<%=result[0][0].status%>)</h4>
                                 <div id="activity" class="py-2">
-                                    <div class="media border-bottom py-3">
-                                        <img width="35" src="/Admin/./assets/images/avatar/1.jpg" alt="avatar" class="mr-3">
-                                        <div class="media-body">
-                                            <h5>Task finished</h5>
-                                            <p class="mb-0">I shared this on my fb</p>
-                                        </div><span>April 24</span>
+                                    <div class="media-body" style="margin-top:20px;">
+                                        <h5 style="color:#1f5ab0;"> PAN Card </h5>
+                                   
                                     </div>
                                     <div class="media border-bottom py-3">
-                                        <img width="35" src="/Admin/./assets/images/avatar/2.jpg" alt="avatar" class="mr-3">
-                                        <div class="media-body">
-                                            <h5>Task overdue</h5>
-                                            <p class="mb-0">I shared this on my fb</p>
-                                        </div><span class="text-muted ">April 24</span>
+                                        <img width="45" src="/images/<%=result[0][0].pan_front_image%>" alt="avatar" class="mr-3">
+                                        <img width="45" src="/images/<%=result[0][0].pan_back_image%>" alt="avatar" class="mr-3">
+                                        
+                                       
+                                    </div>
+
+
+
+                                    <div class="media-body" style="margin-top:20px;">
+
+                                        <h5 style="color:#1f5ab0;">Aadhar Card </h5>
+                                   
                                     </div>
                                     <div class="media border-bottom py-3">
-                                        <img width="35" src="/Admin/./assets/images/avatar/2.jpg" alt="avatar" class="mr-3">
-                                        <div class="media-body">
-                                            <h5>Task overdue</h5>
-                                            <p class="mb-0">I shared this on my fb</p>
-                                        </div><span class="text-muted ">April 24</span>
+                                        <img width="45" src="/images/<%=result[0][0].aadhar_front_image%>" alt="avatar" class="mr-3">
+                                        <img width="45" src="/images/<%=result[0][0].aadhar_back_image%>" alt="avatar" class="mr-3">
+                                        
+                                       
                                     </div>
-                                    <div class="media py-3">
-                                        <img width="35" src="/Admin/./assets/images/avatar/3.jpg" alt="avatar" class="mr-3">
-                                        <div class="media-body">
-                                            <h5>New Comment</h5>
-                                            <p class="mb-0">I shared this on my fb</p>
-                                        </div><span class="text-muted ">April 24</span>
+
+
+                                    <% if(result[0][0].status == 'approved') { %>
+                                   
+                                 
+
+
+                             <% } else { %>
+
+                                <div class="media py-3">
+                                    <button type="button" class='btn btn-success change_status' name="approved"  id="<%=result[0][0].id%>">Approved</button>
+                                    <div class="media-body">
+                                      
+                                        <button type="button" class='btn btn-warning change_status' name="rejected" id="<%=result[0][0].id%>" style="margin-left: 20px;">Reject</button>
+                                        
                                     </div>
+                                </div>
+
+
+                                <% } %>
+
+
                                 </div>
                             </div>
                         </div>
@@ -456,6 +516,22 @@
     <script src="/Admin/main/./js/dashboard/dashboard-3.js"></script>
 
     
+
+
+<script>
+
+$('.change_status').click(function(){
+    let status = $(this).attr('name');
+    let id = $(this).attr('id')
+   
+$.post('/admin/dashboard/vendor/update-status',{id,status},(req,res)=>{
+    location.reload();
+})
+
+})
+
+</script>
+
 
 </body>
 

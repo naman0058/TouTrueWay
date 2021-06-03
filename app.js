@@ -14,7 +14,7 @@ var admin = require('./routes/Admin/Login');
 var adminDashboard = require('./routes/Admin/Dashboard')
 var vendor_registeration = require('./routes/Vendor/registeration')
 var vendor_dashboard = require('./routes/Vendor/vendorDashboard');
-
+var vendorLogin = require('./routes/Vendor/login');
 var app = express();
 
 // view engine setup
@@ -56,6 +56,7 @@ app.use('/admin/dashboard',adminDashboard);
 app.use('/api',api);
 app.use('/vendor-registeration',vendor_registeration);
 app.use('/vendor-dashboard',vendor_dashboard);
+app.use('/vendor-login',vendorLogin);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
